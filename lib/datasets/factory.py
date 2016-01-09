@@ -10,32 +10,19 @@
 __sets = {}
 
 import datasets.pascal_voc
+import datasets.willow_garage
 import numpy as np
 
-def _selective_search_IJCV_top_k(split, year, top_k):
-    """Return an imdb that uses the top k proposals from the selective search
-    IJCV code.
-    """
-    imdb = datasets.pascal_voc(split, year)
-    imdb.roidb_handler = imdb.selective_search_IJCV_roidb
-    imdb.config['top_k'] = top_k
-    return imdb
+# Set up willow_garage_2011
+willow_garage_devkit_path = '/home/ubuntu/WillowDataset'
+for split in ['train']:
+    name = '{}_{}'.format('willow_garage', split) 
+    print datasets.willow_garage
+    #imdb = datasets.willow_garage.willow_garage('train', '2011', willow_garage_devkit_path)
+    #print imdb
+    #__sets[name] = imdb
+    __sets[name] = (lambda split=split: datasets.willow_garage.willow_garage(split, '2011', willow_garage_devkit_path))
 
-# Set up voc_<year>_<split> using selective search "fast" mode
-for year in ['2007', '2012']:
-    for split in ['train', 'val', 'trainval', 'test']:
-        name = 'voc_{}_{}'.format(year, split)
-        __sets[name] = (lambda split=split, year=year:
-                datasets.pascal_voc(split, year))
-
-# Set up voc_<year>_<split>_top_<k> using selective search "quality" mode
-# but only returning the first k boxes
-for top_k in np.arange(1000, 11000, 1000):
-    for year in ['2007', '2012']:
-        for split in ['train', 'val', 'trainval', 'test']:
-            name = 'voc_{}_{}_top_{:d}'.format(year, split, top_k)
-            __sets[name] = (lambda split=split, year=year, top_k=top_k:
-                    _selective_search_IJCV_top_k(split, year, top_k))
 
 def get_imdb(name):
     """Get an imdb (image database) by name."""

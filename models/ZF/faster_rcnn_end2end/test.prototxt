@@ -342,21 +342,21 @@ layer {
   }
 }
 layer {
-  name: "cls_score"
+  name: "cls_score_willow"
   type: "InnerProduct"
   bottom: "fc7"
   top: "cls_score"
   inner_product_param {
-    num_output: 21
+    num_output: 9
   }
 }
 layer {
-  name: "bbox_pred"
+  name: "bbox_pred_willow"
   type: "InnerProduct"
   bottom: "fc7"
   top: "bbox_pred"
   inner_product_param {
-    num_output: 84
+    num_output: 36
   }
 }
 layer {

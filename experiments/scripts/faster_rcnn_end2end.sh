@@ -13,9 +13,12 @@ export PYTHONUNBUFFERED="True"
 GPU_ID=$1
 NET=$2
 NET_lc=${NET,,}
-ITERS=70000
-DATASET_TRAIN=voc_2007_trainval
-DATASET_TEST=voc_2007_test
+#ITERS=70000
+#DATASET_TRAIN=voc_2007_trainval
+#DATASET_TEST=voc_2007_test
+ITERS=10000
+DATASET_TRAIN=willow_garage_train
+DATASET_TEST=willow_garage_train
 
 array=( $@ )
 len=${#array[@]}
