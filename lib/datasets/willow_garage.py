@@ -186,11 +186,10 @@ class willow_garage(datasets.imdb):
         for ix in xrange(num_objs):
             cls = self._class_to_ind[lines[num_objs]]
             bbox = np.array(lines[2 * num_objs].split(), dtype="float");
-            # Convert from OpenCV (x,y) coordinates to numpy (x,y) coordinates
-            x1 = bbox[1]
-            y1 = bbox[0]
-            x2 = bbox[3]
-            y2 = bbox[2]
+            x1 = bbox[0]
+            y1 = bbox[1]
+            x2 = bbox[2]
+            y2 = bbox[3]
             boxes[ix, :] = [x1, y1, x2, y2]
             gt_classes[ix] = cls
             overlaps[ix, cls] = 1.0

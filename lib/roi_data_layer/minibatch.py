@@ -42,13 +42,22 @@ def get_minibatch(roidb, num_classes):
         blobs['im_info'] = np.array(
             [[im_blob.shape[2], im_blob.shape[3], im_scales[0]]],
             dtype=np.float32)
+
+        # For debug visualizations
+        #rois_blob = np.zeros((im_blob.shape[0], 5), dtype=np.float32)
+	#rois_blob[:, 0] = xrange(im_blob.shape[0])
+	#rois_blob[:, 1:5] = gt_boxes[:, 0:4]
+	#print rois_blob
+	#labels_blob = gt_boxes[:, 4]
+	#overlaps = np.ones(len(labels_blob))
+        #_vis_minibatch(im_blob, rois_blob, labels_blob, labels_blob)
     else: # not using RPN
         # Now, build the region of interest and label blobs
         rois_blob = np.zeros((0, 5), dtype=np.float32)
         labels_blob = np.zeros((0), dtype=np.float32)
         bbox_targets_blob = np.zeros((0, 4 * num_classes), dtype=np.float32)
         bbox_inside_blob = np.zeros(bbox_targets_blob.shape, dtype=np.float32)
-        # all_overlaps = []
+        all_overlaps = []
         for im_i in xrange(num_images):
             labels, overlaps, im_rois, bbox_targets, bbox_inside_weights \
                 = _sample_rois(roidb[im_i], fg_rois_per_image, rois_per_image,
@@ -64,10 +73,10 @@ def get_minibatch(roidb, num_classes):
             labels_blob = np.hstack((labels_blob, labels))
             bbox_targets_blob = np.vstack((bbox_targets_blob, bbox_targets))
             bbox_inside_blob = np.vstack((bbox_inside_blob, bbox_inside_weights))
-            # all_overlaps = np.hstack((all_overlaps, overlaps))
+            all_overlaps = np.hstack((all_overlaps, overlaps))
 
         # For debug visualizations
-        # _vis_minibatch(im_blob, rois_blob, labels_blob, all_overlaps)
+        #_vis_minibatch(im_blob, rois_blob, labels_blob, all_overlaps)
 
         blobs['rois'] = rois_blob
         blobs['labels'] = labels_blob
