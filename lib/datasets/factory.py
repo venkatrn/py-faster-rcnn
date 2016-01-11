@@ -15,7 +15,7 @@ import numpy as np
 
 # Set up willow_garage_2011
 willow_garage_devkit_path = '/home/ubuntu/WillowDataset'
-for split in ['train']:
+for split in ['train', 'validation', 'test']:
     name = '{}_{}'.format('willow_garage', split) 
     print datasets.willow_garage
     #imdb = datasets.willow_garage.willow_garage('train', '2011', willow_garage_devkit_path)

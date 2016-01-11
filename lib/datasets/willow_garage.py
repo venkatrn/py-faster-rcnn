@@ -26,10 +26,11 @@ class willow_garage(datasets.imdb):
                             else devkit_path
         #self._data_path = os.path.join(self._devkit_path, 'WillowGarage' + self._year)
         self._data_path = os.path.join(self._devkit_path)
-        self._classes = ('__background__', # always index 0
-                         'glass', 'clorox', 'milk_carton', 'milkjug',
-                         'odwalla_jug', 'orange_juice_jug',
-                         'pur_water_pitcher_filter', 'suave-3in1')
+	self._classes = ('__background__', # always index 0
+			'glass_1', 'glass_2', 'glass_3', 'glass_4', 'glass_5', 
+			'glass_6', 'glass_7', 'glass_8', 'wine_glass_1', 'wine_glass_2', 'wine_glass_3', 'wine_glass_4', 'wine_glass_5', 'wine_glass_6', 'cup_1', 'cup_2', 'cup_3', 'bowl_1', 'pitcher_1', 'kettle', 'all_detergent', 'all_detergent_small', 'brita_pitcher', 'clorox', 'milk_carton', 'milkjug',
+			'odwalla_jug', 'orange_juice_jug', 'peroxide', 'tide',
+			'pur_water_pitcher_filter', 'simple_green', 'red_mug', 'suave-3in1', 'tilex_spray', 'vf_paper_bowl')
         self._class_to_ind = dict(zip(self.classes, xrange(self.num_classes)))
         self._image_ext = '.png'
         self._image_index = self._load_image_set_index()
