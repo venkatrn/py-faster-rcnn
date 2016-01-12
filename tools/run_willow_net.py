@@ -25,10 +25,10 @@ import caffe, os, sys, cv2
 import argparse
 
 CLASSES = ('__background__', # always index 0
-		 'glass', 'clorox', 'milk_carton', 'milkjug',
-		 'odwalla_jug', 'orange_juice_jug',
-		 'pur_water_pitcher_filter', 'suave-3in1')
-
+		'glass_1', 'glass_2', 'glass_3', 'glass_4', 'glass_5', 
+		'glass_6', 'glass_7', 'glass_8', 'wine_glass_1', 'wine_glass_2', 'wine_glass_3', 'wine_glass_4', 'wine_glass_5', 'wine_glass_6', 'cup_1', 'cup_2', 'cup_3', 'bowl_1', 'pitcher_1', 'kettle', 'all_detergent', 'all_detergent_small', 'brita_pitcher', 'clorox', 'milk_carton', 'milkjug',
+		'odwalla_jug', 'orange_juice_jug', 'peroxide', 'tide',
+		'pur_water_pitcher_filter', 'simple_green', 'red_mug', 'suave-3in1', 'tilex_spray', 'vf_paper_bowl')
 def vis_detections(im, class_name, dets, thresh=0.5):
     """Draw detected bounding boxes."""
     inds = np.where(dets[:, -1] >= thresh)[0]
@@ -61,11 +61,10 @@ def vis_detections(im, class_name, dets, thresh=0.5):
     plt.tight_layout()
     plt.draw()
 
-def demo(net, image_name):
+def demo(net, im_file, output_file):
     """Detect object classes in an image using pre-computed object proposals."""
 
     # Load the demo image
-    im_file = os.path.join(cfg.ROOT_DIR, 'data', 'demo', image_name)
     im = cv2.imread(im_file)
 
     # Detect all object classes and regress object bounds
@@ -77,8 +76,27 @@ def demo(net, image_name):
            '{:d} object proposals').format(timer.total_time, boxes.shape[0])
 
     # Visualize detections for each class
-    CONF_THRESH = 0.5 #0.8
-    NMS_THRESH = 0.1 #0.3
+    CONF_THRESH = 0.8 #0.8
+    NMS_THRESH = 0.3 #0.3
+
+
+    # Write output to file
+    output = open(output_file, 'w')
+    for cls_ind, cls in enumerate(CLASSES[1:]):
+        cls_ind += 1 # because we skipped background
+        cls_boxes = boxes[:, 4*cls_ind:4*(cls_ind + 1)]
+        cls_scores = scores[:, cls_ind]
+        dets = np.hstack((cls_boxes,
+                          cls_scores[:, np.newaxis])).astype(np.float32)
+        keep = nms(dets, NMS_THRESH)
+        dets = dets[keep, :]
+	cls_boxes = cls_boxes.transpose()
+	for box_ind, box in enumerate(cls_boxes):
+	    output.write(CLASSES[cls_ind] + '\n')
+ 	    output.write(str(cls_scores[box_ind]) + '\n')
+            output.write(' '.join([str(x) for x in cls_boxes[:,box_ind]]) + '\n')
+    output.close()
+
     for cls_ind, cls in enumerate(CLASSES[1:]):
         cls_ind += 1 # because we skipped background
         cls_boxes = boxes[:, 4*cls_ind:4*(cls_ind + 1)]
@@ -88,6 +106,7 @@ def demo(net, image_name):
         keep = nms(dets, NMS_THRESH)
         dets = dets[keep, :]
         vis_detections(im, cls, dets, thresh=CONF_THRESH)
+	
 
 def parse_args():
     """Parse input arguments."""
@@ -99,6 +118,10 @@ def parse_args():
                         action='store_true')
     parser.add_argument('--net', dest='demo_net', help='Network to use [vgg16]',
                         choices='', default='vgg16')
+    parser.add_argument('--input', dest='input_file', help='Input image for detection',
+                        default='')
+    parser.add_argument('--output', dest='output_file', help='Output file in which detections are written',
+                        default='', required=True)
 
     args = parser.parse_args()
 
@@ -109,14 +132,10 @@ if __name__ == '__main__':
 
     args = parse_args()
 
-    #prototxt = os.path.join(cfg.ROOT_DIR, 'models', NETS[args.demo_net][0],
-    #                        'faster_rcnn_alt_opt', 'faster_rcnn_test.pt')
-    #caffemodel = os.path.join(cfg.ROOT_DIR, 'data', 'faster_rcnn_models',
-    #                          NETS[args.demo_net][1])
     prototxt = os.path.join(cfg.ROOT_DIR, 'models', 'ZF', 'faster_rcnn_end2end',
                               'test.prototxt')
     caffemodel = os.path.join(cfg.ROOT_DIR, 'output',
-                            'faster_rcnn_end2end', 'willow_garage_2011_train', 'zf_faster_rcnn_iter_10000.caffemodel')
+                            'faster_rcnn_end2end', 'willow_garage_2011_train', 'zf_faster_rcnn_iter_70000.caffemodel')
 
     if not os.path.isfile(caffemodel):
         raise IOError(('{:s} not found.\nDid you run ./data/script/'
@@ -132,17 +151,14 @@ if __name__ == '__main__':
 
     print '\n\nLoaded network {:s}'.format(caffemodel)
 
-    # Warmup on a dummy image
-    im = 128 * np.ones((300, 500, 3), dtype=np.uint8)
-    for i in xrange(2):
-        _, _= im_detect(net, im)
-
     #im_names = ['000456.jpg', '000542.jpg', '001150.jpg',
     #            '001763.jpg', '004545.jpg']
-    im_names = ['custom.png']
+    #im_names = ['custom.png']
+    im_names = [args.input_file]
     for im_name in im_names:
         print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
         print 'Demo for data/demo/{}'.format(im_name)
-        demo(net, im_name)
+    	im_file = os.path.join(cfg.ROOT_DIR, 'data', 'demo', im_name)
+        demo(net, im_file, args.output_file)
 
     plt.show()
