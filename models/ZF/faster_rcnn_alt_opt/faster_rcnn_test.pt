@@ -296,27 +296,27 @@ layer {
   }
 }
 layer {
-  name: "cls_score"
+  name: "cls_score_willow"
   type: "InnerProduct"
   bottom: "fc7"
-  top: "cls_score"
+  top: "cls_score_willow"
   inner_product_param {
-    num_output: 21
+    num_output: 37
   }
 }
 layer {
-  name: "bbox_pred"
+  name: "bbox_pred_willow"
   type: "InnerProduct"
   bottom: "fc7"
-  top: "bbox_pred"
+  top: "bbox_pred_willow"
   inner_product_param {
-    num_output: 84
+    num_output: 148
   }
 }
 layer {
-  name: "cls_prob"
+  name: "cls_prob_willow"
   type: "Softmax"
-  bottom: "cls_score"
+  bottom: "cls_score_willow"
   top: "cls_prob"
   loss_param {
     ignore_label: -1
