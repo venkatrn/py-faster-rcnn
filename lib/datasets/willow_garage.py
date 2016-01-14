@@ -231,12 +231,13 @@ class willow_garage(datasets.imdb):
     def _do_matlab_eval(self, comp_id, output_dir='output'):
         rm_results = self.config['cleanup']
 
-        path = os.path.join(os.path.dirname(__file__),
-                            'VOCdevkit-matlab-wrapper')
+        #path = os.path.join(os.path.dirname(__file__),
+        #                    'VOCdevkit-matlab-wrapper')
+        path = '/usr/home/ubuntu/matlab'
         cmd = 'cd {} && '.format(path)
-        cmd += '{:s} -nodisplay -nodesktop '.format(datasets.MATLAB)
-        cmd += '-r "dbstop if error; '
-        cmd += 'voc_eval(\'{:s}\',\'{:s}\',\'{:s}\',\'{:s}\',{:d}); quit;"' \
+        #cmd += '{:s} -nodisplay -nodesktop '.format(datasets.MATLAB)
+        #cmd += '-r "dbstop if error; '
+        cmd += 'egohands_eval(\'{:s}\',\'{:s}\',\'{:s}\',\'{:s}\',{:d}); quit;"' \
                .format(self._devkit_path, comp_id,
                        self._image_set, output_dir, int(rm_results))
         print('Running:\n{}'.format(cmd))

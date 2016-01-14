@@ -26,7 +26,7 @@ echo Logging output to "$LOG"
 time ./tools/train_faster_rcnn_alt_opt.py --gpu ${GPU_ID} \
   --net_name ${NET} \
   --weights data/imagenet_models/${NET}.v2.caffemodel \
-  --imdb voc_2007_trainval \
+  --imdb willow_garage_train \
   --cfg experiments/cfgs/faster_rcnn_alt_opt.yml \
   ${EXTRA_ARGS}
 
@@ -37,6 +37,6 @@ set -x
 time ./tools/test_net.py --gpu ${GPU_ID} \
   --def models/${NET}/faster_rcnn_alt_opt/faster_rcnn_test.pt \
   --net ${NET_FINAL} \
-  --imdb voc_2007_test \
+  --imdb willow_garage_test \
   --cfg experiments/cfgs/faster_rcnn_alt_opt.yml \
   ${EXTRA_ARGS}
