@@ -76,7 +76,7 @@ def demo(net, im_file, output_file):
            '{:d} object proposals').format(timer.total_time, boxes.shape[0])
 
     # Visualize detections for each class
-    CONF_THRESH = 0.8 #0.8
+    CONF_THRESH = 0.3 #0.8
     NMS_THRESH = 0.3 #0.3
 
 
@@ -132,13 +132,18 @@ if __name__ == '__main__':
 
     args = parse_args()
 
-    prototxt = os.path.join(cfg.ROOT_DIR, 'models', 'ZF', 'faster_rcnn_end2end',
-                              'test.prototxt')
+    # prototxt = os.path.join(cfg.ROOT_DIR, 'models', 'ZF', 'faster_rcnn_end2end',
+    #                           'test.prototxt')
+    # caffemodel = os.path.join(cfg.ROOT_DIR, 'output',
+    #                         'faster_rcnn_end2end', 'willow_garage_2011_train',
+    #                         'zf_faster_rcnn_iter_50000.caffemodel')
+    prototxt = os.path.join(cfg.ROOT_DIR, 'models', 'ZF', 'faster_rcnn_alt_opt',
+                              'faster_rcnn_test.pt')
     caffemodel = os.path.join(cfg.ROOT_DIR, 'output',
-                            'faster_rcnn_end2end', 'willow_garage_2011_train', 'zf_faster_rcnn_iter_70000.caffemodel')
-
+                            'faster_rcnn_alt_opt', 'willow_garage_2011_train',
+                            'ZF_faster_rcnn_final.caffemodel')
     if not os.path.isfile(caffemodel):
-        raise IOError(('{:s} not found.\nDid you run ./data/script/'
+        raise IOError(('{:s} not found.\nDid you run ./data/script/' \
                        'fetch_faster_rcnn_models.sh?').format(caffemodel))
 
     if args.cpu_mode:
